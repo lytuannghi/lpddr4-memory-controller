@@ -1,0 +1,16 @@
+# Private Study Guides (Never push to remote)
+GIAI_THICH_TOAN_DIEN_LPDDR4.md
+giaithichdoan.md
+*.md.bak
+
+# Simulation artifacts & binary output
+*.vvp
+*.vcd
+output/
+sim/*.vvp
+sim/*.vcd
+
+# Python cache & Environment
+__pycache__/
+*.pyc
+.env
