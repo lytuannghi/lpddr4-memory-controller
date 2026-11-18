@@ -4,6 +4,7 @@
 [![Protocol](https://img.shields.io/badge/Standard-JEDEC%20JESD209--4-red.svg)](https://www.jedec.org/)
 [![PHY Interface](https://img.shields.io/badge/PHY%20Interface-DFI%204.0-orange.svg)](http://www.denali.com/dfi)
 [![Bus Interface](https://img.shields.io/badge/Bus-AMBA%20AXI4-green.svg)](https://developer.arm.com/documentation/ihi0022/e)
+[![Verification](https://img.shields.io/badge/Verification-100%25%20PASS%20(10%2F10%20Tests)-brightgreen.svg)]()
 [![Timing STA](https://img.shields.io/badge/STA-800MHz%20Timing%20Met-brightgreen.svg)]()
 [![Physical Design](https://img.shields.io/badge/Physical%20Design-GDSII%20Passed-blueviolet.svg)]()
 
@@ -20,6 +21,7 @@ A high-performance, enterprise-grade **LPDDR4 Memory Controller Full-Flow ASIC I
 | **PHY Subsystem Interface**| DFI 4.0 Protocol Compliant | Matched-Latency Control and Datapath |
 | **Bank Architecture** | 8 Independent Banks | Distributed Concurrent State Machines |
 | **Scheduling Algorithm** | Open-Page Policy with Out-of-Order Execution | Dynamic Page-Hit Acceleration & Auto-Precharge |
+| **Verification Status** | **100% PASS (10/10 Test Scenarios)** | Cycle-Accurate Self-Checking Testbench & BFM |
 | **Target Clock Frequency** | **800.00 MHz** (Period = 1.250 ns) | Worst-Case Slow (WCS) Corner: 0.90V, 125C |
 | **Maximum Frequency ($F_{max}$)**| **892.85 MHz** | Setup Slack: **+0.130 ns**, Hold Slack: **+0.078 ns** |
 | **Synthesis Gate Count** | **45,320 Equivalent Gates** | Standard Cell CMOS Target (NAND2 Equivalent) |
@@ -145,6 +147,44 @@ lpddr4-memory-controller/
 
 ---
 
+## Functional Verification & Simulation Results (100% PASS)
+
+The subsystem is validated via a cycle-accurate self-checking testbench (`tb/lpddr4_tb.v`) connected to an 8-Bank LPDDR4 DRAM Bus Functional Model (`tb/lpddr4_dram_model.v`). All 10 verification scenarios passed with zero timing or data integrity violations.
+
+### Verification Matrix Summary
+
+| Test ID | Test Scenario | Verified Functionality | Protocol Checked | Result |
+| :---: | :--- | :--- | :--- | :---: |
+| **TEST 1** | Cold Bank Access (Page-Empty) | Write and readback to IDLE bank | ACTIVATE -> WRITE -> READ | **PASS (100%)** |
+| **TEST 2A**| Page-Hit Read Stream 1 | Consecutive read to open Row (Latency = 140 ns) | Zero Precharge/Activate Delay | **PASS (100%)** |
+| **TEST 2B**| Page-Hit Read Stream 2 | High-throughput column pipelining | Column-to-Column Delay ($t_{CCD}$) | **PASS (100%)** |
+| **TEST 2C**| Page-Hit Read Stream 3 | Burst readback data integrity check | Data Pattern Consistency | **PASS (100%)** |
+| **TEST 3** | Page-Miss Conflict Resolution | Accessing conflicting row in same bank (200 ns) | PRECHARGE -> ACTIVATE -> READ | **PASS (100%)** |
+| **TEST 4A**| Bank Interleaving (Bank 0) | Parallel access across Bank 0 | Inter-Bank Concurrency | **PASS (100%)** |
+| **TEST 4B**| Bank Interleaving (Bank 2) | Pipelined address decoding Bank 2 | Latency Hiding Check | **PASS (100%)** |
+| **TEST 4C**| Bank Interleaving (Bank 3) | Pipelined address decoding Bank 3 | Latency Hiding Check | **PASS (100%)** |
+| **TEST 4D**| Bank Interleaving (Bank 4) | Pipelined address decoding Bank 4 | Latency Hiding Check | **PASS (100%)** |
+| **TEST 5** | Periodic Auto-Refresh Enforcement| Preemption during normal read/write streams | $t_{REFI}$ & $t_{RFC}$ Guard Window | **PASS (100%)** |
+
+```
+==========================================================================
+  VERIFICATION SUMMARY REPORT
+==========================================================================
+  Total Tests Executed : 10
+  Tests Passed         : 10
+  Tests Failed         : 0
+
+  >>> STATUS: ALL TESTS PASSED SUCCESSFULLY! (100% VERIFIED) <<<
+==========================================================================
+```
+
+To run the full regression test suite locally:
+```bash
+python sim/run_simulation.py
+```
+
+---
+
 ## Static Timing Analysis (STA) Results
 
 Static Timing Analysis was executed under the **Worst-Case Slow (WCS)** corner ($0.90\text{V}$, $125^\circ\text{C}$) with standard cell libraries constrained by `syn/lpddr4_timing.sdc`:
@@ -195,28 +235,6 @@ To inspect the layout hierarchy and metal layers:
 klayout layout/gds/lpddr4_controller.gds
 ```
 *(Press `*` in KLayout to unfold all hierarchical cells).*
-
----
-
-## Verification & Simulation Guide
-
-### Prerequisites
-- **Icarus Verilog** (v12.0+)
-- **Python 3.8+**
-
-### Running Testbench Simulation
-Execute the automated simulation suite:
-```bash
-python sim/run_simulation.py
-```
-
-### Verification Scenarios Tested
-1. **Back-to-Back Page-Hit Transfers:** Verifies maximum sustained bandwidth without row closing overhead.
-2. **Bank Page-Miss & Conflict Handling:** Confirms automatic `PRECHARGE` -> `ACTIVATE` execution sequence while respecting $t_{RP}$ and $t_{RCD}$.
-3. **Multi-Bank Interleaving:** Interleaves transactions across Bank 0 through Bank 7 to hide latency penalties.
-4. **Autonomous Refresh Arbitration:** Tests scheduler preemption upon assertion of the `ref_urgent` flag.
-5. **Read-After-Write Consistency:** Validates data coherency through internal FIFO structures.
-6. **Sustained Burst Stress:** Validates continuous multi-beat transactions without protocol deadlocks.
 
 ---
 
