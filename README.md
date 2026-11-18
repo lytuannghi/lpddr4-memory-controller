@@ -10,7 +10,7 @@ A high-performance, synthesizable **LPDDR4 Memory Controller Subsystem IP** writ
 
 ---
 
-## 🏛️ System Architecture
+## System Architecture
 
 ```
                     HỆ THỐNG LPDDR4 MEMORY CONTROLLER SUBSYSTEM
@@ -70,7 +70,7 @@ A high-performance, synthesizable **LPDDR4 Memory Controller Subsystem IP** writ
 
 ---
 
-## ⚡ Tính Năng Kỹ Thuật Nổi Bật
+## Tính Năng Kỹ Thuật Nổi Bật
 
 1. **Tuân thủ chuẩn JEDEC JESD209-4 & DFI 4.0:**
    - Hỗ trợ đầy đủ bộ tập lệnh JEDEC: `ACTIVATE`, `PRECHARGE`, `PRECHARGE_ALL`, `READ`, `WRITE`, `AUTO_REFRESH`, `SELF_REFRESH`.
@@ -87,7 +87,7 @@ A high-performance, synthesizable **LPDDR4 Memory Controller Subsystem IP** writ
 
 ---
 
-## 📂 Cấu Trúc Thư Mục Dự Án
+## Cấu Trúc Thư Mục Dự Án
 
 ```
 lpddr4-memory-controller/
@@ -111,7 +111,7 @@ lpddr4-memory-controller/
 
 ---
 
-## 🚀 Hướng Dẫn Biên Dịch & Chạy Mô Phỏng
+## Hướng Dẫn Biên Dịch & Chạy Mô Phỏng
 
 Dự án đã được tự động hóa hoàn toàn thông qua Python và Icarus Verilog:
 
