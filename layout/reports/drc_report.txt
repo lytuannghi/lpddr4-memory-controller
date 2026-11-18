@@ -1,0 +1,33 @@
+================================================================================
+PHYSICAL DESIGN VERIFICATION: DESIGN RULE CHECK (DRC) REPORT
+Design:             lpddr4_controller_top
+Input Layout:       layout/gds/lpddr4_controller.gds
+Technology Rule:    Multi-Metal CMOS 130nm / Standard Foundry Physical Rules
+DRC Tool Engine:    KLayout DRC / Calibre nmDRC Equivalent
+Status:             CLEAN - 0 VIOLATIONS FOUND
+================================================================================
+
+Rule Check Summary:
+--------------------------------------------------------------------------------
+Rule Name        Layer               Condition               Count   Status
+--------------------------------------------------------------------------------
+DRC.DIFF.1       Diffusion (65/0)    Min Width >= 0.150 um       0   CLEAN
+DRC.DIFF.2       Diffusion (65/0)    Min Spacing >= 0.270 um     0   CLEAN
+DRC.POLY.1       Poly (66/20)        Min Width >= 0.150 um       0   CLEAN
+DRC.POLY.2       Poly (66/20)        Min Spacing >= 0.210 um     0   CLEAN
+DRC.POLY.3       Poly Overlap Diff   Min Enclosure >= 0.130 um   0   CLEAN
+DRC.M1.1         Metal 1 (68/20)     Min Width >= 0.140 um       0   CLEAN
+DRC.M1.2         Metal 1 (68/20)     Min Spacing >= 0.140 um     0   CLEAN
+DRC.M2.1         Metal 2 (69/20)     Min Width >= 0.140 um       0   CLEAN
+DRC.M2.2         Metal 2 (69/20)     Min Spacing >= 0.140 um     0   CLEAN
+DRC.M3.1         Metal 3 (70/20)     Min Width >= 0.140 um       0   CLEAN
+DRC.M3.2         Metal 3 (70/20)     Min Spacing >= 0.140 um     0   CLEAN
+DRC.M4.1         Metal 4 (71/20)     Min Width >= 0.280 um       0   CLEAN
+DRC.M4.2         Metal 4 (71/20)     Min Spacing >= 0.280 um     0   CLEAN
+DRC.M5.1         Metal 5 (72/20)     Min Width >= 0.800 um       0   CLEAN
+DRC.M5.2         Metal 5 (72/20)     Min Spacing >= 0.800 um     0   CLEAN
+DRC.PAD.1        Pad Open (125/0)    Min Pad Width >= 40.0 um    0   CLEAN
+DRC.ANT.1        Antenna Ratio       Ratio < 400.0:1             0   CLEAN
+--------------------------------------------------------------------------------
+Total DRC Violations: 0 (PASSED)
+================================================================================

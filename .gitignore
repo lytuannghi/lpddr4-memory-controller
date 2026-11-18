@@ -1,16 +1,27 @@
-# Private Study Guides (Never push to remote)
-GIAI_THICH_TOAN_DIEN_LPDDR4.md
+# ==============================================================================
+# Private Study Guides & Local Handbooks (Strictly Protected - Never Push)
+# ==============================================================================
+GIAI_THICH_TOAN_DIEN_*.md
+docs/GIAI_THICH_TOAN_DIEN_*.md
 giaithichdoan.md
 *.md.bak
+*.local.md
 
-# Simulation artifacts & binary output
+# Simulation Artifacts & Binary Outputs
 *.vvp
 *.vcd
 output/
 sim/*.vvp
 sim/*.vcd
 
-# Python cache & Environment
+# Python Cache & Virtual Environments
 __pycache__/
 *.pyc
 .env
+.venv/
+
+# EDA Temporary Work Directories
+*.log
+*.syn
+command.log
+default.svf
