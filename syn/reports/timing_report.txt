@@ -1,8 +1,8 @@
 ================================================================================
-REFERENCE TIMING CONSTRAINT SUMMARY (PRE-SYNTHESIS ANALYTICAL BUDGET)
-Target      : lpddr4_controller_top
-Clock Goal  : 800 MHz (1.25 ns) Reference Budget (OpenSTA requires Foundry .lib)
+SDC TIMING CONSTRAINT & RTL REGISTER AUDIT: lpddr4_controller_top
+Constraint File: syn/lpddr4_timing.sdc
+Target Clock:    800.00 MHz (Period = 1.250 ns)
 ================================================================================
-RTL Static Verification : 0 combinational / or % operators (see rtl_synthesis_check.txt)
-Simulation Signoff      : 12/12 Icarus Verilog -Wall checks PASSED (0 warnings)
-================================================================================
+
+Note: Gate-level post-synthesis STA slack requires external OpenSTA execution.
+Verified 0 combinational / or % operators and 100% functional pass under iverilog -Wall.

@@ -1,50 +1,30 @@
 ================================================================================
-SYNTHESIS HIERARCHICAL AREA REPORT
-Design:             lpddr4_controller_top
-Technology Library: High-Performance Standard Cell Target (CMOS Standard Cells)
-Units:              Area in um^2, Gate Equivalent in 2-input NAND gates (NAND2_X1)
+RTL STRUCTURAL & SYNTHESIS READINESS SUMMARY: lpddr4_controller_top
+Target Library Constraints: SkyWater 130nm HD Standard Cells (SDC)
 ================================================================================
 
---------------------------------------------------------------------------------
-Hierarchy Module Breakdown
---------------------------------------------------------------------------------
-Module Instance           Gate Count  Combinational  Sequential  Total Area (um^2)  % Area
---------------------------------------------------------------------------------
-lpddr4_controller_top         45,320         27,192      18,128         142,380.00  100.0%
-|-- u_axi_slave                8,450          4,225       4,225          26,532.50   18.6%
-|   |-- u_aw_fifo              2,100            840       1,260           6,594.00    4.6%
-|   |-- u_wdata_fifo           3,650          1,460       2,190          11,461.00    8.0%
-|   |-- u_ar_fifo              1,850            740       1,110           5,809.00    4.1%
-|   `-- u_rdata_fifo             850            340         510           2,668.50    1.9%
-|-- u_address_mapper           1,820          1,820           0           5,714.80    4.0%
-|-- u_command_scheduler        9,340          6,538       2,802          29,327.60   20.6%
-|   |-- u_arb_tree             4,200          4,200           0          13,188.00    9.3%
-|   `-- u_timing_engine        5,140          2,338       2,802          16,139.60   11.3%
-|-- Bank FSM Subsystem        14,220          7,110       7,110          44,650.80   31.4%
-|   |-- u_bank_fsm_0           1,777            888         889           5,581.35    3.9%
-|   |-- u_bank_fsm_1           1,777            888         889           5,581.35    3.9%
-|   |-- u_bank_fsm_2           1,777            888         889           5,581.35    3.9%
-|   |-- u_bank_fsm_3           1,777            888         889           5,581.35    3.9%
-|   |-- u_bank_fsm_4           1,777            888         889           5,581.35    3.9%
-|   |-- u_bank_fsm_5           1,777            888         889           5,581.35    3.9%
-|   |-- u_bank_fsm_6           1,777            888         889           5,581.35    3.9%
-|   `-- u_bank_fsm_7           1,781            894         887           5,581.35    3.9%
-|-- u_refresh_controller       2,890          1,445       1,445           9,074.60    6.4%
-`-- u_dfi_master               8,600          6,020       2,580          27,014.00   19.0%
-    |-- u_dfi_cmd_gen          3,200          2,560         640          10,048.00    7.1%
-    |-- u_dfi_wrdata_path      3,400          2,040       1,360          10,676.00    7.5%
-    `-- u_dfi_rddata_path      2,000          1,420         580           6,290.00    4.4%
+================================================================================
+RTL SYNTHESIS READINESS & CONSTRAINT REPORT: lpddr4-memory-controller
+Method : Static Verilog/SV Structural Parser + SDC Constraint Audit
+Note   : Foundry Gate-Level Netlist & STA require PDK Liberty (.lib) + Synopsys/OpenROAD
+================================================================================
+RTL Source Files Inspected : 7
+Code Lines (Non-Comment)   : 817
+Sequential Blocks          : 5
+Combinational Blocks       : 0
+Declared reg/logic Signals : 76
 
---------------------------------------------------------------------------------
-CELL TYPE DISTRIBUTION
---------------------------------------------------------------------------------
-Cell Category                 Count     Percentage
-Inverters / Buffers           9,850          21.7%
-NAND / AND Gates              8,430          18.6%
-NOR / OR Gates                5,210          11.5%
-AOI / OAI Complex Gates       7,120          15.7%
-Multiplexers (MUX2, MUX4)     4,250           9.4%
-Flip-Flops (DFF, DFFR, DFFS) 10,460          23.1%
---------------------------------------------------------------------------------
-Total Cells                  45,320         100.0%
+MODULE BREAKDOWN:
+  rtl\address_mapper.v                          | modules=address_mapper               | loc=  16 | seq= 0 | comb= 0
+  rtl\axi_slave_frontend.v                      | modules=axi_slave_frontend           | loc= 166 | seq= 1 | comb= 0
+  rtl\bank_fsm.v                                | modules=bank_fsm                     | loc=  91 | seq= 1 | comb= 0
+  rtl\command_scheduler.v                       | modules=command_scheduler            | loc= 231 | seq= 1 | comb= 0
+  rtl\dfi_master.v                              | modules=dfi_master                   | loc=  70 | seq= 1 | comb= 0
+  rtl\lpddr4_controller_top.v                   | modules=lpddr4_controller_top        | loc= 186 | seq= 0 | comb= 0
+  rtl\refresh_controller.v                      | modules=refresh_controller           | loc=  57 | seq= 1 | comb= 0
+
+SDC CLOCK CONSTRAINTS:
+  (No create_clock constraints found)
+
+ARITHMETIC DIVISION/MODULO CHECK: CLEAN (0 combinational / or % operators)
 ================================================================================
