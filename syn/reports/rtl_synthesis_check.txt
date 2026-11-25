@@ -1,0 +1,25 @@
+================================================================================
+RTL SYNTHESIS READINESS & CONSTRAINT REPORT: lpddr4-memory-controller
+Method : Static Verilog/SV Structural Parser + SDC Constraint Audit
+Note   : Foundry Gate-Level Netlist & STA require PDK Liberty (.lib) + Synopsys/OpenROAD
+================================================================================
+RTL Source Files Inspected : 7
+Code Lines (Non-Comment)   : 817
+Sequential Blocks          : 5
+Combinational Blocks       : 0
+Declared reg/logic Signals : 76
+
+MODULE BREAKDOWN:
+  rtl\address_mapper.v                          | modules=address_mapper               | loc=  16 | seq= 0 | comb= 0
+  rtl\axi_slave_frontend.v                      | modules=axi_slave_frontend           | loc= 166 | seq= 1 | comb= 0
+  rtl\bank_fsm.v                                | modules=bank_fsm                     | loc=  91 | seq= 1 | comb= 0
+  rtl\command_scheduler.v                       | modules=command_scheduler            | loc= 231 | seq= 1 | comb= 0
+  rtl\dfi_master.v                              | modules=dfi_master                   | loc=  70 | seq= 1 | comb= 0
+  rtl\lpddr4_controller_top.v                   | modules=lpddr4_controller_top        | loc= 186 | seq= 0 | comb= 0
+  rtl\refresh_controller.v                      | modules=refresh_controller           | loc=  57 | seq= 1 | comb= 0
+
+SDC CLOCK CONSTRAINTS:
+  (No create_clock constraints found)
+
+ARITHMETIC DIVISION/MODULO CHECK: CLEAN (0 combinational / or % operators)
+================================================================================

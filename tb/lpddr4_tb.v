@@ -64,6 +64,18 @@ module lpddr4_tb;
     wire                   dfi_rddata_valid;
     wire                   dfi_init_complete;
 
+    // Physical PHY Monitoring & Calibration Training Wires
+    wire                   phy_ck_t, phy_ck_c, phy_cs, phy_cke, phy_rst_n;
+    wire [5:0]             phy_ca;
+    wire [1:0]             phy_dqs_t, phy_dqs_c, phy_dmi;
+    wire [15:0]            phy_dq;
+    wire [`DATA_WIDTH-1:0] phy_mon_rddata;
+    wire                   phy_mon_rdvalid, phy_mon_init;
+    reg                    phy_train_start;
+    wire                   phy_train_done, phy_train_err;
+    wire [2:0]             phy_train_state;
+    wire [7:0]             cal_ca_dly, cal_dqs_dly, cal_vref_val;
+
     // Test tracking variables
     integer total_tests  = 0;
     integer passed_tests = 0;
@@ -141,6 +153,45 @@ module lpddr4_tb;
         .dfi_rddata        (dfi_rddata),
         .dfi_rddata_valid  (dfi_rddata_valid),
         .dfi_init_complete (dfi_init_complete)
+    );
+
+    lpddr4_phy_model u_phy_mon (
+        .dfi_clk           (clk),
+        .rst_n             (rst_n),
+        .dfi_address       (dfi_address),
+        .dfi_bank          (dfi_bank),
+        .dfi_cs_n          (dfi_cs_n),
+        .dfi_ras_n         (dfi_ras_n),
+        .dfi_cas_n         (dfi_cas_n),
+        .dfi_we_n          (dfi_we_n),
+        .dfi_wrdata        (dfi_wrdata),
+        .dfi_wrdata_mask   (dfi_wrdata_mask),
+        .dfi_wrdata_en     (dfi_wrdata_en),
+        .dfi_rddata        (phy_mon_rddata),
+        .dfi_rddata_valid  (phy_mon_rdvalid),
+        .dfi_init_complete (phy_mon_init),
+        .lpddr4_ck_t       (phy_ck_t),
+        .lpddr4_ck_c       (phy_ck_c),
+        .lpddr4_ca         (phy_ca),
+        .lpddr4_cs         (phy_cs),
+        .lpddr4_cke        (phy_cke),
+        .lpddr4_reset_n    (phy_rst_n),
+        .lpddr4_dqs_t      (phy_dqs_t),
+        .lpddr4_dqs_c      (phy_dqs_c),
+        .lpddr4_dq         (phy_dq),
+        .lpddr4_dmi        (phy_dmi)
+    );
+
+    lpddr4_phy_training u_phy_train (
+        .clk                  (clk),
+        .rst_n                (rst_n),
+        .start_training       (phy_train_start),
+        .training_done        (phy_train_done),
+        .training_error       (phy_train_err),
+        .training_state       (phy_train_state),
+        .calibrated_ca_delay  (cal_ca_dly),
+        .calibrated_dqs_delay (cal_dqs_dly),
+        .calibrated_vref_val  (cal_vref_val)
     );
 
     // -------------------------------------------------------------------------
@@ -229,14 +280,14 @@ module lpddr4_tb;
     task assert_equal;
         input [31:0] actual;
         input [31:0] expected;
-        input [127:0] test_name;
+        input [64*8-1:0] test_name;
         begin
             total_tests = total_tests + 1;
             if (actual === expected) begin
-                $display("[PASS] %s | Expected: 0x%08h, Actual: 0x%08h", test_name, expected, actual);
+                $display("[PASS] %0s | Expected: 0x%08h, Actual: 0x%08h", test_name, expected, actual);
                 passed_tests = passed_tests + 1;
             end else begin
-                $display("[FAIL] %s | Expected: 0x%08h, Actual: 0x%08h", test_name, expected, actual);
+                $display("[FAIL] %0s | Expected: 0x%08h, Actual: 0x%08h", test_name, expected, actual);
                 failed_tests = failed_tests + 1;
             end
         end
@@ -254,12 +305,13 @@ module lpddr4_tb;
     // -------------------------------------------------------------------------
     initial begin
         // Setup Waveform dump
-        $dumpfile("D:/CODE/GGANTIGRAVITY/minipj/output/lpddr4_waveform.vcd");
+        $dumpfile("sim/output/lpddr4_waveform.vcd");
         $dumpvars(0, lpddr4_tb);
 
         // Signal initialization
-        clk           = 0;
-        rst_n         = 0;
+        clk             = 0;
+        rst_n           = 0;
+        phy_train_start = 0;
         s_axi_awid    = 0;
         s_axi_awaddr  = 0;
         s_axi_awlen   = 0;
@@ -287,8 +339,9 @@ module lpddr4_tb;
         // Reset Sequence
         #20;
         rst_n = 1;
+        phy_train_start = 1'b1;
         #30;
-        $display("\n[STAGE 1] Power-on Reset Complete. PHY Handshake Ready.");
+        $display("\n[STAGE 1] Power-on Reset Complete. PHY Calibration Active.");
 
         // ---------------------------------------------------------------------
         // TEST 1: Cold Bank Access (Page Empty -> ACTIVATE -> WRITE -> READ)
@@ -366,6 +419,14 @@ module lpddr4_tb;
         // Re-read Bank 4 to ensure data was retained perfectly
         axi_read_single(32'h0001_4000, 4'hA, read_back_data);
         assert_equal(read_back_data, 32'hBB04_0000, "Test 5: Data Retention After Refresh");
+
+        // ---------------------------------------------------------------------
+        // TEST 6: LPDDR4 PHY Initialization, Training & Differential Pin Check
+        // ---------------------------------------------------------------------
+        #1;
+        $display("\n[TEST 6] LPDDR4 PHY Calibration & Differential Pin Integrity");
+        assert_equal({23'd0, phy_train_done, cal_vref_val}, {23'd0, 1'b1, 8'd36}, "Test 6A: PHY Training & Vref Calibration");
+        assert_equal({29'd0, phy_mon_init, phy_cke, (phy_ck_c ^ phy_ck_t)}, 32'd7, "Test 6B: PHY Init, CKE & Diff CK");
 
         // ---------------------------------------------------------------------
         // Final Summary Report
