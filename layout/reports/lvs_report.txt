@@ -3,7 +3,7 @@ GDSII STRUCTURAL EXTRACTION & PIN CONNECTIVITY REFERENCE REPORT
 Project     : JEDEC LPDDR4 Memory Controller Subsystem
 Target      : lpddr4_controller_top
 GDSII File  : layout/gds/lpddr4_controller.gds (546,258 bytes)
-Note        : Full foundry Netgen/Calibre LVS requires PDK SPICE extraction
+Note        : External Magic/Netgen required for SPICE extraction & transistor LVS
 ================================================================================
 
 Die Bounding Box      : (0.00, 0.00) um to (680.00, 680.00) um
